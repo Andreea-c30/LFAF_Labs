@@ -69,6 +69,6 @@ class Main:
 
         f.is_deterministic(delta)
         print(f.nfa_to_dfa(Q, Sigma, delta, q0, F))
-         #graph representation
-       # f.graph_representation(Q, delta, q0, F)
+        #graph representation
+        f.graph_representation(Q, delta, q0, F)
 

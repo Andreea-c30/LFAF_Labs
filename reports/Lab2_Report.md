@@ -2,7 +2,7 @@
 
 ### Course: Formal Languages & Finite Automata
 
-### Author: Andreea Chiper
+### Author: Andreea Chiper, FAF-212, Variant 7
 
 ------------------------------------------------------------------------
 
