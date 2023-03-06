@@ -2,67 +2,48 @@
 
 ### Course: Formal Languages & Finite Automata
 
-### Author: Andreea Chiper
+### Author: Andreea Chiper, FAF-212, Variant 7
 
 ------------------------------------------------------------------------
 
 ## Theory
 
-   Formal languages, which we study on this course, represents an
-essential concept in computer science. As we can define it to be a set
-of symbols which are deduced by a set of rules, named grammar.    In
-general, grammar consists of: alphabet, nonterminal(VN) and terminal(VT)
-variables, a start symbol (S) and a set of rules (P).    There are 4
-types of grammar according to Chomsky Classification: \* Type 0 --
-Phrase-structure Grammars \* Type 1 -- Context-Sensitive \* Type 2 --
-Context-Free \* Type 3 -- Regular
+  &ensp;&ensp;&ensp; Formal languages, which we study on this course, represents an essential concept in computer science. As we can define it to be a set of symbols which are deduced by a set of rules, named grammar. 
+  
+  &ensp;&ensp;&ensp; In general, grammar consists of: alphabet, nonterminal(VN) and terminal(VT) variables, a start symbol (S) and a set of rules (P). 
+  
+  &ensp;&ensp;&ensp; There are 4 types of grammar according to Chomsky Classification:
+* Type 0 – Phrase-structure Grammars
+* Type 1 – Context-Sensitive
+* Type 2 – Context-Free
+* Type 3 – Regular
 
 ## Objectives:
 
-1.  Understand what a language is and what it needs to have in order to
-    be considered a formal one.
+1.  Understand what a language is and what it needs to have in order to be considered a formal one.
 
-2.  Provide the initial setup for the evolving project that you will
-    work on during this semester. I said project because usually at lab
-    works, I encourage/impose students to treat all the labs like stages
-    of development of a whole project. Basically you need to do the
-    following:
+2.  Provide the initial setup for the evolving project that you will work on during this semester. I said project because usually at lab works, I encourage/impose students to treat all the labs like stages of development of a whole project. Basically you need to do the following:
 
-```{=html}
-<!-- -->
-```
-a.  Create a local && remote repository of a VCS hosting service (let us
-    all use Github to avoid unnecessary headaches);
-b.  Choose a programming language, and my suggestion would be to choose
-    one that supports all the main paradigms;
-c.  Create a separate folder where you will be keeping the report. This
-    semester I wish I won't see reports alongside source code files,
-    fingers crossed;
+    a.  Create a local && remote repository of a VCS hosting service (let us all use Github to avoid unnecessary headaches);
 
-```{=html}
-<!-- -->
-```
-3.  According to your variant number (by universal convention it is
-    register ID), get the grammar definition and do the following tasks:
+    b.  Choose a programming language, and my suggestion would be to choose one that supports all the main paradigms;
 
-```{=html}
-<!-- -->
-```
-a.  Implement a type/class for your grammar;
-b.  Add one function that would generate 5 valid strings from the
-    language expressed by your given grammar;
-c.  Implement some functionality that would convert and object of type
-    Grammar to one of type Finite Automaton;
-d.  For the Finite Automaton, please add a method that checks if an
-    input string can be obtained via the state transition from it;
+    c.  Create a separate folder where you will be keeping the report. This semester I wish I won't see reports alongside source code files, fingers crossed;
+
+3.  According to your variant number (by universal convention it is register ID), get the grammar definition and do the following tasks:
+
+    a.  Implement a type/class for your grammar;
+
+    b.  Add one function that would generate 5 valid strings from the language expressed by your given grammar;
+
+    c.  Implement some functionality that would convert and object of type Grammar to one of type Finite Automaton;
+
+    d.  For the Finite Automaton, please add a method that checks if an input string can be obtained via the state transition from it;
 
 ## Implementation description
 
-   To implement this laboratory work I have used two classes to
-represent the main objects: Grammar and FiniteAutomata, in python
-language. I used a dictionary data type to define the syntax and wrote
-the rules from my variant.
-
+    &ensp;&ensp;&ensp; To implement this laboratory work I have used two classes to represent the main objects: Grammar and FiniteAutomata, in python language. I used a dictionary data type to define the syntax and wrote the rules from my variant.
+```
     grammar = Grammar({  
         "S": ["aD"],  
       "D": ["bE"],  
@@ -70,40 +51,57 @@ the rules from my variant.
       "F": ["dD"],  
       "L": ["aL", "bL", "c"],  
     })
+```
+   &ensp;&ensp;&ensp; Firstly, the class Grammar consists of the methods:
 
-   Firstly, the class Grammar consists of the methods: \* Method to
-generate a word (generate_word()) it recieves the starting symbol of the
-grammar rules and generates a string based from the grammar I have
-defined. For this method I have used a recursive approach, so the rules
-are applied until it finds the terminal symbol. \* The method to convert
-grammar to finite automata (grammar_to_fa()) - I extracted the set of
-states and the alphabet from the production to execute it. Then I set
-the initial and final states, and the transitions are calculated using
-the grammar rules.    Secondly, the class FiniteAutomata which is
-responsible for defining the fa has the methods: \* transition_to - this
-method uses state and symbol so it returns the next state according to
-the transitions from the conversion. \* validation - this method
-verifies the input word and returns true is the word can be generated by
-the FA and False - otherwise.    I also have created an additional class
-Main where I create the objects, define the grammar and call the
-functions. Also, for the last task we had to check if a input string is
-valid or not, therefore here is the example I tried to test:
+* Method to generate a word (generate_word()) it recieves the starting symbol of the grammar rules and generates a string based from the grammar I have defined. For this method I have used a recursive approach, so the rules are applied until it finds the terminal symbol.
 
-`input_string_1 = "abcdbdac"   print(f"Word {input_string_1} is valid ->", fa.validation(input_string_1))`
+* The method to convert grammar to finite automata (grammar_to_fa()) - I extracted the set of states and the alphabet from the production to execute it. Then I set the initial and final states, and the transitions are calculated using the grammar rules.
 
-`input_string_2 = "abcdbdacaaaaaaaaa" print(f"Word {input_string_2} is valid ->", fa.validation(input_string_2))`
+&ensp;&ensp;&ensp;Secondly, the class FiniteAutomata which is responsible for defining the fa has the methods:
+* transition_to - this method uses state and symbol so it returns the next state according to the transitions from the conversion.
+* validation - this method verifies the input word and returns  true is the word can be generated by the FA and False - otherwise.
 
+&ensp;&ensp;&ensp;I also have created an additional class Main where I create the objects, define the grammar and call the functions. Also, for the last task we had to check if a input string is valid or not, therefore here is the example I tried to test:
+
+```
+
+input_string_1 = "abcdbdac"   
+
+print(f"Word {input_string_1} is valid ->", fa.validation(input_string_1))
+
+input_string_2 = "abcdbdacaaaaaaaaa" 
+
+print(f"Word {input_string_2} is valid ->", fa.validation(input_string_2))
+
+````
 ## Conclusions / Screenshots / Results
 
-Working on this laboratory I have implemented a grammar in order to
-generate valid words according to the given rules. For the next part I
-have used Finite Automata implementation, so I created a method that
-converts, an object of type grammar into Finite Automata. Being a new
-topic, I have studied a lot in order to understand the concept behind
-the problem, and finally I have accomplished to finish all the tasks
+ &ensp;&ensp;&ensp; Working on this laboratory I have implemented a grammar in order to generate valid words according to the given rules. For the next part I have used Finite Automata implementation, so I created a method that converts, an object of type grammar into Finite Automata. Being a new topic, I have studied a lot in order to understand the concept behind the problem, and finally I have accomplished to finish all the tasks
+
+ &ensp;&ensp;&ensp; The results I have obtained during this lab can be observed in the figures below
+
+ &ensp;&ensp;&ensp; As you can observe here are represented the 5 strings generated by the grammar rules
+ 
+  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp; ![GenerateWords](https://user-images.githubusercontent.com/84787381/218895336-9b939202-62d9-450d-a969-451cfa75a806.png)
+  
+   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp; &ensp;&ensp;&ensp; &ensp;&ensp;&ensp; &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;    &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  Figure 1. Generated strings
+
+ &ensp;&ensp;&ensp; In order to convert the grammar into finite automata, I showed the elements: states,alphabet, transitions, initial and final state.
+ 
+   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp; ![ConverToFA](https://user-images.githubusercontent.com/84787381/218895348-dcc9142a-6e5c-4303-a7df-6c0aa21e149c.png)
+   
+ &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp; &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  Figure 2. Transformation of Grammar into FA
+ 
+ &ensp;&ensp;&ensp; In the last but not least figure we can see an output that shows the result of the validation function. The string was the input showed before and as a return we recieve if the string can be obtained by the FA according to the rules.
+ 
+ &ensp;&ensp;&ensp;    &ensp;&ensp; &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp; ![Validation](https://user-images.githubusercontent.com/84787381/218895359-d25a70a9-e690-4bcb-8610-2d070fdd8d7d.png)
+
+ &ensp;&ensp;&ensp; &ensp;&ensp;&ensp;   &ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;  &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp; &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   &ensp;&ensp;&ensp;   Figure 3. Validation result
+
 
 ## References
 
--   https://www.geeksforgeeks.org/regular-grammar-model-regular-grammars/
--   https://www.geeksforgeeks.org/regular-grammar-model-regular-grammars/
--   https://www.youtube.com/watch?v=ZZi5DJINwJ0&t=1s&ab_channel=tvnagarajuTechnical
+-   Regular grammar (Model regular grammars ) [online source]: https://www.geeksforgeeks.org/regular-grammar-model-regular-grammars/
+-   Language by Grammar [online source]: https://www.tutorialspoint.com/automata_theory/language_generated_by_grammars.html
+-   Conversion from Regular Grammar into Finite Automata [online source]: https://youtu.be/ZZi5DJINwJ0
