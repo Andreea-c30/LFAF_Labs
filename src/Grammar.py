@@ -50,5 +50,23 @@ class Grammar:
                             F=F)
         return fa
 
+    #determine the grammar type
+    def classify_chomsky(self):
+        #check if the grammar is type3
+        if all(len(r) <= 2 and (len(r) == 1 or r[0].islower() or r[1].isupper()) for rhs in self.production.values() for r
+               in rhs):
+            return "Type-3: Regular grammar"
+
+        #check if the grammar is type2
+        if all(len(r) == 1 and r[0].islower() for rhs in self.production.values() for r in rhs):
+            return "Type-2: Context-free grammar"
+
+        #check if the grammar is type1
+        if all(len(r) >= len(lhs) for lhs, rhs in self.production.items() for r in rhs):
+            return "Type-1: Context-sensitive grammar"
+
+        return "Type-0: Unrestricted grammar"
+
+
 
 
