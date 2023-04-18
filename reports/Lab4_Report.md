@@ -24,7 +24,6 @@
 5. Obtain the Chomsky normal form.
 
 &ensp;&ensp;&ensp;In combination, these steps convert the original context-free grammar into CNF, a more constrained and standardized version.
-
   
 ## Objectives:
 
@@ -40,19 +39,19 @@
 
 ## Implementation description
 
-The program for converting a grammar into Chomsky normal form was written in Python and includes a class called Chomsky, which is tested using unit tests.
+&ensp;&ensp;&ensp;The program for converting a grammar into Chomsky normal form was written in Python and includes a class called Chomsky, which was tested using unit tests.
 
-The steps for converting into CNF were defined as the following methods:
+&ensp;&ensp;&ensp;The steps for converting into CNF were defined as the following methods:
 
-1. The method remove_epsilon_prod() - removes epsilon productions from the specified grammar. 
+1. The method remove_epsilon_prod() - removing epsilon productions from the specified grammar. 
 
-It finds non-terminal symbols (nt) in the grammar that have epsilon, represented by ('') as one of its productions and generates new ones to take their place. 
+&ensp;&ensp;&ensp;It finds non-terminal symbols (nt) in the grammar that have epsilon, represented by ('') as one of its productions and generates new ones to take their place. 
 
 ```
 epsilons = [nt for nt in grammar if '' in grammar[nt]]
 ```
 
-It generates every possible combinations of productions without epsilon for each non-terminal with epsilon and adds them to the new productions for each non-terminal with epsilon. Except for epsilon, it also includes the original productions without epsilon. 
+&ensp;&ensp;&ensp;It is generated every possible combination of productions without epsilon for each non-terminal with epsilon and added to the new productions for each non-terminal with epsilon.
 
 ```
 new_prod = prod.replace(eps, '')
@@ -62,15 +61,15 @@ new_prod = prod.replace(eps, '')
                 new_productions[nt] |= set(grammar[nt]) - {''}
 ```
 
-Finally, it removes the grammar's original epsilon production and returns the revised grammar.
+&ensp;&ensp;&ensp;Finally, it is removed the grammar's original epsilon production and returned the updated grammar.
 
 ```
  grammar = {nt: list(prods) for nt, prods in new_productions.items() if prods}
  
 ```
-2. The method eliminate_unit_prod()- eliminates unit productions from the given grammar. 
+2. The method eliminate_unit_prod()- eliminating unit productions from the given grammar. 
 
-Identifies non-terminal symbols that have exactly one production, which is also a non-terminal symbol, and replaces the unit production with the productions of the non-terminal symbol it produces. This process is repeated until there are no more unit productions in the grammar. The method returns the updated grammar.
+&ensp;&ensp;&ensp;Are identified non-terminal symbols that have exactly one production, which is also a non-terminal symbol, and replaced the unit production with the productions of the non-terminal symbol it produced. This process is repeated until there are no more unit productions in the grammar. The method returns the updated grammar.
 
 ```
 units = [(nt, prod) for nt in grammar for prod in grammar[nt] if len(prod) == 1 and prod.isupper()]
@@ -83,11 +82,11 @@ units = [(nt, prod) for nt in grammar for prod in grammar[nt] if len(prod) == 1 
                 if len(new_prod) == 1 and new_prod.isupper():
                     units.append((nt, new_prod))
 ```
-3. The method remove_inaccessible() - removes inaccessible symbols from the given grammar. 
+3. The method remove_inaccessible() - removing inaccessible symbols from the given grammar. 
 
-Identifies non-terminal symbols that are not reachable from the start symbol 'S' and removes them from the grammar. It also removes productions that contain non-terminal symbols that are not reachable from 'S'. 
+&ensp;&ensp;&ensp;Identifies non-terminal symbols that are not reachable from the start symbol 'S' and removes them from the grammar. It also removes productions that contain non-terminal symbols that are not reachable from 'S'. 
 
-Starting from the start symbol 'S', adding reachable symbols to the accessible set. 
+&ensp;&ensp;&ensp;Starting from the start symbol 'S', adding reachable symbols to the accessible set. 
 
 ```
         while queue:
@@ -100,7 +99,7 @@ Starting from the start symbol 'S', adding reachable symbols to the accessible s
                             queue.append(s)
 ```
 
-Updating the grammar by removing inaccessible productions for each non-terminal symbol in the grammar. It iterates through the accessible symbols and for each non-terminal symbol, it creates a list of updated productions by filtering inaccessible symbols. If there are any updated productions, they are added to the new grammar with the non-terminal symbol as the key. 
+&ensp;&ensp;&ensp;Updating the grammar by removing inaccessible productions for each non-terminal symbol in the grammar. Iterating through the accessible symbols and for each non-terminal symbol, it is created a list of updated productions by filtering inaccessible symbols. If there are any updated productions, they are added to the new grammar with the non-terminal symbol as the key. 
 
 ```
         for nt in sorted(accessible):
@@ -112,11 +111,12 @@ Updating the grammar by removing inaccessible productions for each non-terminal 
                 new_grammar[nt] = sorted(new_productions)
 ```
 
-Finally, it returns the updated grammar as the new_grammar dictionary
+&ensp;&ensp;&ensp;Finally, it is returned the updated grammar as the new_grammar dictionary
 
 4. The method remove_nonproductive() - removes non-productive symbols from the grammar. 
 
-Indentify the productive symbols and adds it to a set in order to eliminate further the nonproductive symbols
+&ensp;&ensp;&ensp;It is indentified the productive symbols and is added it to a set in order to eliminate further the nonproductive symbols
+
 ```
 productive = set()
         for nt, prods in grammar.items():
@@ -124,7 +124,7 @@ productive = set()
                 if all(s in productive or s.islower() for s in prod):
                     productive.add(nt)
 ```
-Finds non-terminal symbols that do not generate any terminal symbol and removes them from the grammar. 
+&ensp;&ensp;&ensp;Are found non-terminal symbols that do not generate any terminal symbol and are removed from the grammar. 
 
 ```
 new_grammar = {}
@@ -134,7 +134,7 @@ new_grammar = {}
                 if new_prods:
                     new_grammar[nt] = new_prods
 ```
-5. The method apply_rules() - applies all the above rules to the given grammar in the following order: remove_epsilon_prod, eliminate_unit_prod, remove_inaccessible, and remove_nonproductive. It returns the updated grammar.
+5. The method apply_rules() - are applied all the above rules to the given grammar in the following order: remove_epsilon_prod, eliminate_unit_prod, remove_inaccessible, and remove_nonproductive. Returning the updated grammar.
 ```
     def apply_rules(self, grammar):
         grammar = self.remove_epsilon_prod(grammar)
@@ -145,11 +145,11 @@ new_grammar = {}
         return grammar
 ```
 
-6. The method chomsky_normal_form() - converts the grammar into Chomsky Normal Form by applying the rules in the apply_rules method. 
+6. The method chomsky_normal_form() - converting the grammar into Chomsky Normal Form by applying the rules in the apply_rules method. 
 
-Then, it creates new non-terminal symbols for each terminal symbol in the grammar and adds new productions for them, as well as some additional productions required for CNF.
+&ensp;&ensp;&ensp;Then, creating new non-terminal symbols for each terminal symbol in the grammar and adds new productions for them, as well as some additional productions required for CNF.
 
-Selects the terminal symbols by iterating over the grammar's productions and adding new productions for each terminal symbol in the format Xn -> t, where n is an incrementing index and t is a terminal symbol.
+&ensp;&ensp;&ensp;Selecting the terminal symbols by iterating over the grammar's productions and adding new productions for each terminal symbol in the format Xn -> t, where n is an incrementing index and t is a terminal symbol.
 
 ```
 index = 0
@@ -158,7 +158,7 @@ index = 0
             new_grammar[new_nt] = [t]
             index += 1
 ```
-Iterating through new_grammar and its productions, it generates new productions for each non-terminal symbol in the grammar. If there is only one lowercase symbol in the production, it substitutes it with the matching non-terminal symbol from new_grammar. Then adding the corresponding new productions to match the rules of the CNF.
+&ensp;&ensp;&ensp;Iterating through new_grammar and its productions, are generated new productions for each non-terminal symbol in the grammar. If there is only one lowercase symbol in the production, it is substituted it with the matching non-terminal symbol from new_grammar. Then adding the corresponding new productions to match the rules of the CNF.
 
 ```
  productions = []
@@ -176,9 +176,9 @@ Iterating through new_grammar and its productions, it generates new productions 
                     productions.append(f"{nt} -> {new_prod}")
 ```
 
-Last but not least, unit tests were built in order to execute and test the program. The test cases verify the accuracy of the Chomsky class's apply_rules() and chomsky_normal_form() methods.
+&ensp;&ensp;&ensp;Last but not least, unit tests were built in order to execute and test the program. The test cases verify the accuracy of the Chomsky class's apply_rules() and chomsky_normal_form() methods.
 
-The first two test cases, test_rules_nr1() and test_rules_nr2(), determine whether the apply_rules() method applies the grammatical transformation rules successfully. 
+&ensp;&ensp;&ensp;The first two test cases, test_rules_nr1() and test_rules_nr2(), determine whether the apply_rules() method applies the grammatical transformation rules successfully. 
 
 ```
     def test_rules_nr1(self):
@@ -214,7 +214,7 @@ The first two test cases, test_rules_nr1() and test_rules_nr2(), determine wheth
         self.assertEqual(ch.apply_rules(grammar), result)
 ```
 
-The third test case, test_conversion(), determines whether the chomsky_normal_form() method converts the grammar appropriately to Chomsky normal form.
+&ensp;&ensp;&ensp;The third test case, test_conversion(), determines whether the chomsky_normal_form() method converts the grammar appropriately to Chomsky normal form.
 
 ```
     def test_conversion(self):
@@ -238,13 +238,13 @@ The third test case, test_conversion(), determines whether the chomsky_normal_fo
         self.assertEqual(ch.chomsky_normal_form(grammar), result)
 ```
 
-To run the test cases, it is called the unittest.main() function, which will detect and run all of the TestChomskyNormalForm class's test cases. If all of the assertions in the test cases pass without exceptions, it shows that the Chomsky class implementation is correct. Otherwise, it will indicate that there may be implementation problems that need to be solved.
+&ensp;&ensp;&ensp;To run the test cases, it is called the unittest.main() function, which has detected and run all of the TestChomskyNormalForm class's test cases. If all of the assertions in the test cases pass without exceptions, it is shown that the Chomsky class implementation is correct. Otherwise, it is indicated that there may be implementation problems that need to be solved.
 
 ## Conclusions / Screenshots / Results
 
-In conclusion, the laboratory work required developing and implementing a program that can convert context-free grammars into Chomsky normal form. Unit tests were used to confirm the program's accuracy and functionality. The implemented program converts the grammar into Chomsky normal form using grammar transformation rules and provides a way to obtain the converted grammar as a string representation.
+&ensp;&ensp;&ensp;In conclusion, the laboratory work required developing and implementing a program that can convert context-free grammars into Chomsky normal form. Unit tests were used to confirm the program's accuracy and functionality. The implemented program converts the grammar into Chomsky normal form using grammar transformation rules and provides a way to obtain the converted grammar as a string representation.
 
-The initial grammar was represented as a dictionary
+&ensp;&ensp;&ensp;The initial grammar was represented as a dictionary
 ```
  {'S': ['bA', 'B'], 
  'A': ['a', 'aS', 'bAaAb'], 
@@ -252,9 +252,9 @@ The initial grammar was represented as a dictionary
  'C': ['', 'AB'], 
  'E': ['BA']}
 ```
-After performing multiple grammar operations, such as removing epsilon productions, unit productions, inaccessible symbols, and nonproductive symbols, the resulting grammar at each step is represented below:
+&ensp;&ensp;&ensp;After performing multiple grammar operations, such as removing epsilon productions, unit productions, inaccessible symbols, and nonproductive symbols, the resulting grammar at each step is represented below:
 
-Removing epsilon productions:
+&ensp;&ensp;&ensp;Removing epsilon productions:
 ```
  {'S': ['bA', 'B'], 
  'A': ['a', 'bAaAb', 'aS'], 
@@ -262,7 +262,7 @@ Removing epsilon productions:
  'C': ['AB'], 
  'E': ['BA']}
 ```
-Removing unit productions:
+&ensp;&ensp;&ensp;Removing unit productions:
  ```
  {'S': ['bA', 'aAa', 'AC', 'bS', 'a', 'bAaAb', 'aS'], 
  'A': ['a', 'bAaAb', 'aS'], 
@@ -270,14 +270,14 @@ Removing unit productions:
  'C': ['AB'], 
  'E': ['BA']}
 ```
-Eliminate inaccessible symbols:
+&ensp;&ensp;&ensp;Eliminate inaccessible symbols:
  ```
  {'S': ['AC', 'a', 'aAa', 'aS', 'bA', 'bAaAb', 'bS'], 
  'A': ['a', 'aS', 'bAaAb'], 
  'B': ['AC', 'a', 'aAa', 'aS', 'bAaAb', 'bS'], 
  'C': ['AB']}
 ```
-Eliminate nonproductive symbols:
+&ensp;&ensp;&ensp;Eliminate nonproductive symbols:
 ```
  {'S': ['AC', 'a', 'aAa', 'aS', 'bA', 'bAaAb', 'bS'], 
  'A': ['a', 'aS', 'bAaAb'], 
@@ -285,7 +285,7 @@ Eliminate nonproductive symbols:
  'C': ['AB']}
 ```
 
-Lastly in the end it would be obtained the CNF as follows:
+&ensp;&ensp;&ensp;Lastly in the end it would be obtained the CNF as follows:
 
 ```
 S -> AC
@@ -312,8 +312,14 @@ X3 -> X2X1
 X4 -> AX3
 ```
 
-Unit testing is an important phase in software development since it aids in the identification and correction of bugs in the code. The unit tests given, test_rules_nr1(), test_rules_nr2(), and test_conversion(), cover several scenarios and validate the implemented functions. If all of the test cases pass without issues, it means that the program achieves the expected results.
+&ensp;&ensp;&ensp;Unit testing is an important phase in software development since it aids in the identification and correction of bugs in the code. The unit tests given, test_rules_nr1(), test_rules_nr2(), and test_conversion(), cover several scenarios and validate the implemented functions. If all of the test cases pass without issues, it means that the program achieves the expected results. As shown in figure 1, 3 out of 3 tests were passed, therefore the program works without any problems.
+ <div align="center">
+    
+![unit_test_result](https://user-images.githubusercontent.com/84787381/232864451-7c6f5321-ac74-4f32-a963-932d34fd577b.png)
 
+Figure. 1. Test output </div>
+
+&ensp;&ensp;&ensp;Overall, working on this laboratory allowed me to create a program for converting context-free grammars into Chomsky normal form and execute unit testing to check its accuracy. It was a valuable experience in terms of comprehending grammar transformation and unit testing principles in the context of programming and software development.
 
 ## References
 [1] [Chomsky's Normal Form (CNF)](https://www.javatpoint.com/automata-chomskys-normal-form)
