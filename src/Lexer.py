@@ -1,92 +1,101 @@
+from tokens import Token, TokenType
+
+WHITESPACE = ' \n\t'
+DIGITS = '0123456789'
+
 
 class Lexer:
+    def __init__(self, text):
+        self.text = iter(text)
+        self.advance()
 
-    #function that performs lexical analysis on a number
-    def lex_num(self,line):
-        num = ""
-        for c in line:
-            if not c.isdigit():
-                break
-            num += c
-        return 'INT', int(num), len(num)
+    def advance(self):
+        try:
+            self.current_char = next(self.text)
+        except StopIteration:
+            self.current_char = None
 
-    #function that performs lexical analysis on a string
-    def lex_str(self,line):
-        delimiter = line[0]
-        string = ""
-        for c in line[1:]:
-            if c == delimiter:
-                break
-            string += c
-        return 'STRING', string, len(string) + 2  # + 2 to account for the quotes
-
-    #function that performs lexical analysis on a keywords and user input definitions
-    def lex_id(self,line):
-        keys = ['main','cin','cout', 'while', 'if', 'else', 'elif','for','do', 'return', 'int','bool','float']
-        id = ""
-        for c in line:
-            if not (c.isdigit() or c.isalpha() or c == "_"):
-                break
-            id += c
-        if id in keys:
-            return 'KEYWORD', id, len(id)
-        else:
-            return 'ID', id, len(id)
-
-    #function that performs lexical analysis on a symbol
-     def lex_symb(self, line):
-        #dictionary that contains the symbols
-        symbols = {"BRACES": ["{", "}"],
-                   "PARENTHESES": ["(",")"],
-                   "RBRACK": ["[", "]"],
-                   "PLUS": "+", "MINUS": "-", "MULTIPLICATION": "*", "DIVISION": "/", "MODULUS": "%",
-                   "SEMICOLON": ";","COMMA": ",","EQUAL": "=","AND": "&", "OR": "|",
-                   "COMPARATOR": ["<",">"]
-                   }
-        for symbol_type, symbol_list in symbols.items():
-            if line[0] in symbol_list:
-                return symbol_type + ' ' , line[0]
-        return None
-
-    #function to tokenize a given input string
-    def lex(self, line):
-        tokens = []
-        lexeme_count = 0
-        while lexeme_count < len(line):
-            lexeme = line[lexeme_count]
-            if lexeme.isdigit():
-                typ, tok, consumed = self.lex_num(line[lexeme_count:])
-            elif lexeme in ('"', "'"):
-                typ, tok, consumed = self.lex_str(line[lexeme_count:])
-            elif lexeme.isalpha() or lexeme == "_":
-                typ, tok, consumed = self.lex_id(line[lexeme_count:])
-            elif lexeme in ('{', '}', '(', ')', '[', ']',
-                            '+','-','*','/','%',',',';','=',
-                            '&','|','<','>'):
-                typ, tok = self.lex_symb(line[lexeme_count:])
-                consumed = 1
+    def generate_tokens(self):
+        while self.current_char != None:
+            if self.current_char in WHITESPACE:
+                self.advance()
+            elif self.current_char == '"' or self.current_char == "'":
+                yield self.generate_string()
+            elif self.current_char == '.' or self.current_char in DIGITS:
+                yield self.generate_number()
+            elif self.current_char.isalpha() or self.current_char == "_":
+                yield self.generate_identifier_or_keyword()
+            elif self.current_char == '+':
+                self.advance()
+                yield Token(TokenType.PLUS)
+            elif self.current_char == '-':
+                self.advance()
+                yield Token(TokenType.MINUS)
+            elif self.current_char == '*':
+                self.advance()
+                yield Token(TokenType.MULTIPLY)
+            elif self.current_char == '/':
+                self.advance()
+                yield Token(TokenType.DIVIDE)
+            elif self.current_char == '(':
+                self.advance()
+                yield Token(TokenType.LPAREN)
+            elif self.current_char == ')':
+                self.advance()
+                yield Token(TokenType.RPAREN)
+            elif self.current_char == '{' or self.current_char == '}':
+                self.advance()
+                yield Token(TokenType.BRACES)
+            elif self.current_char == '=':
+                self.advance()
+                yield Token(TokenType.EQUAL)
+            elif self.current_char == ';':
+                self.advance()
+                yield Token(TokenType.SEMICOLON)
             else:
-                lexeme_count += 1
-                continue
-            tokens.append((typ, tok))
-            lexeme_count += consumed
-        for token in tokens:
-            print(f"Token {token}")
-        return tokens
+                raise Exception(f"Illegal character '{self.current_char}'")
 
-if __name__ == '__main__':
-        # defining the input of the lexer
-        code = 'int main() { \
-               double n1, n2, n3;\
-               cout << "Enter three numbers: "; \
-               cin >> n1 >> n2 >> n3; \
-               if(n1 >= n2 && n1 >= n3) \
-                    cout << "Largest number: " << n1; \
-               else if(n2 >= n1 && n2 >= n3) \
-                 cout << "Largest number: " << n2; \
-               else \
-                    cout << "Largest number: " << n3; \
-               return 0;} '
-        lexer=Lexer()
-        lexer.lex(code)
+    def generate_string(self):
+        delimiter = self.current_char
+        self.advance()
+        string = ""
+        while self.current_char != None and self.current_char != delimiter:
+            string += self.current_char
+            self.advance()
+        if self.current_char == delimiter:
+            self.advance()
+            return Token(TokenType.STRING, string)
+        else:
+            raise Exception("Unterminated string")
 
+    def generate_identifier_or_keyword(self):
+        id = ""
+        while self.current_char != None and (self.current_char.isalnum() or self.current_char == "_"):
+            id += self.current_char
+            self.advance()
+
+        if id in ['main', 'cin', 'cout', 'while', 'if', 'else', 'elif', 'for', 'do', 'return', 'int', 'bool', 'float']:
+            return Token(TokenType.KEYWORD, id)
+        else:
+            return Token(TokenType.ID, id)
+
+    def generate_number(self):
+        decimal_point_count = 0
+        number_str = self.current_char
+        self.advance()
+
+        while self.current_char != None and (self.current_char == '.' or self.current_char in DIGITS):
+            if self.current_char == '.':
+                decimal_point_count += 1
+                if decimal_point_count > 1:
+                    break
+
+            number_str += self.current_char
+            self.advance()
+
+        if number_str.startswith('.'):
+            number_str = '0' + number_str
+        if number_str.endswith('.'):
+            number_str += '0'
+
+        return Token(TokenType.NUMBER, float(number_str))
